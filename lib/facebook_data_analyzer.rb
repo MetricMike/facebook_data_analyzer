@@ -20,7 +20,7 @@ module FacebookDataAnalyzer
   def self.run(options = {})
     catalog        = options.fetch(:catalog)
     xlsx           = [options.fetch(:filename), 'xlsx'].join('.')
-    html           = [options.fetch(:filename), 'html'].join('.')
+    html           = [options.fetch(:filename), 'html'].join('.') if options.fetch(:html)
     parallel_usage = options.fetch(:parallel)
 
     package = ::Axlsx::Package.new
@@ -37,8 +37,10 @@ module FacebookDataAnalyzer
     puts "= Export #{xlsx}"
     package.serialize(xlsx)
 
-    puts "= Export #{html}"
-    b = ::Workbook::Book.open(xlsx)
-    b.write_to_html(html)
+    if html
+      puts "= Export #{html}"
+      b = ::Workbook::Book.open(xlsx)
+      b.write_to_html(html)
+    end
   end
 end
